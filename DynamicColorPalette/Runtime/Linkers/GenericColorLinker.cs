@@ -1,7 +1,7 @@
 ﻿ using DynamicColorPalette.Runtime.Properties;
  using UnityEngine;
 
- namespace DynamicColorPalette.Runtime
+ namespace DynamicColorPalette.Runtime.Linkers
 {
     public class GenericColorLinker : MonoBehaviour
     {

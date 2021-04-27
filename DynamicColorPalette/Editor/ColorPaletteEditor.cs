@@ -1,4 +1,5 @@
 ﻿using DynamicColorPalette.Runtime;
+using DynamicColorPalette.Runtime.SO;
 using UnityEditor;
 using UnityEngine;
 

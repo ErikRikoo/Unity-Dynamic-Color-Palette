@@ -1,4 +1,5 @@
 ﻿using System;
+using DynamicColorPalette.Runtime.SO;
 using DynamicColorPalette.Runtime.Utilities;
 using UnityEngine;
 using UnityEngine.Events;
@@ -19,6 +20,7 @@ namespace DynamicColorPalette.Runtime.Properties
                 target = onColorUpdated.Target as UnityEngine.Object,
                 methodName = onColorUpdated.Method.Name,
             };
+            
         }
         
         public int Index
