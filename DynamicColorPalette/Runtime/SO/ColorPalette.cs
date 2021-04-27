@@ -1,18 +1,17 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
+using DynamicColorPalette.Runtime.Utilities;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace UnityTemplateProjects
+namespace DynamicColorPalette.Runtime.SO
 {
     [Serializable]
     public class ColorEvent : UnityEvent<Color>
     {
         
     }
-    
-    
+
     [Serializable]
     public class ColorAttribute
     {
@@ -44,7 +43,6 @@ namespace UnityTemplateProjects
             listeners.RemoveListener(_listenerToRemove);
         }
     }
-    
     
     [CreateAssetMenu(fileName = "ColorPalette", menuName = "ColorPalette", order = 0)]
     public class ColorPalette : ScriptableObject

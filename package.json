@@ -1,7 +1,7 @@
 ﻿{
   "name": "com.rikoo.dynamic-color-palette",
   "displayName": "Dynamic Color Palette",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "This package allows you to dynamically link a color to a ScriptableObject that is representing a color set",
   "keywords": [
     "utility",

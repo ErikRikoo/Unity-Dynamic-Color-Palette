@@ -1,16 +1,9 @@
 ﻿﻿using UnityEngine;
 
-namespace Editor.Utilities
+ namespace DynamicColorPalette.Editor.Utilities
 {
-    public enum LineDrawingType
-    {
-        
-    }
-    
     public static class Drawing
     {
-
-
         public static void DrawHorizontalLine(Vector2 _start, Vector2 _end, Color _color, float _width)
         {
             Rect drawingRect = new Rect(_start.x, _start.y, _end.x - _start.x, _width);

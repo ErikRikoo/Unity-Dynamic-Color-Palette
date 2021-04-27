@@ -1,12 +1,12 @@
-﻿﻿using UnityEngine;
+﻿ using DynamicColorPalette.Runtime.Properties;
+ using UnityEngine;
 
-namespace UnityTemplateProjects
+ namespace DynamicColorPalette.Runtime.Linkers
 {
     public class GenericColorLinker : MonoBehaviour
     {
         [SerializeField] private ColorLink m_ColorLink;
         [SerializeField] private MBMethodStorage m_MethodStorage;
-        
         
         private void OnValidate()
         {

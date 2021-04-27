@@ -1,8 +1,10 @@
-﻿﻿using System;
+﻿using System;
+using DynamicColorPalette.Runtime.SO;
+using DynamicColorPalette.Runtime.Utilities;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace UnityTemplateProjects
+namespace DynamicColorPalette.Runtime.Properties
 {
     [Serializable]
     public class ColorLink
@@ -18,6 +20,7 @@ namespace UnityTemplateProjects
                 target = onColorUpdated.Target as UnityEngine.Object,
                 methodName = onColorUpdated.Method.Name,
             };
+            
         }
         
         public int Index

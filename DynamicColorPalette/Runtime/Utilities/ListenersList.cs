@@ -1,9 +1,8 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
-using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
-namespace UnityTemplateProjects
+namespace DynamicColorPalette.Runtime.Utilities
 {
     [Serializable]
     public class Listener

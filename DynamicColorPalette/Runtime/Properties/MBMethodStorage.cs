@@ -1,8 +1,7 @@
-﻿﻿using System;
-using UnityEditor.IMGUI.Controls;
+﻿using System;
 using UnityEngine;
 
-namespace UnityTemplateProjects
+namespace DynamicColorPalette.Runtime.Properties
 {
     [Serializable]
     public class MBMethodStorage
@@ -12,7 +11,7 @@ namespace UnityTemplateProjects
 
         public void Invoke(params object[] args)
         {
-            Instance.GetType().GetMethod(MethodName)?.Invoke(Instance, args);
+            Instance?.GetType().GetMethod(MethodName)?.Invoke(Instance, args);
         }
     }
 }
