@@ -1,9 +1,8 @@
-﻿﻿using UnityEditor;
-using UnityEditor.Rendering;
+﻿using DynamicColorPalette.Runtime;
+using UnityEditor;
 using UnityEngine;
-using UnityTemplateProjects;
 
-namespace Editor
+namespace DynamicColorPalette.Editor
 {
     [CustomEditor(typeof(ColorPalette))]
     public class ColorPaletteEditor : UnityEditor.Editor

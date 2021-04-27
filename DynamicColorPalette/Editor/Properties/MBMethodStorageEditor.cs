@@ -1,13 +1,11 @@
-﻿﻿using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
+using DynamicColorPalette.Runtime.Properties;
 using Editor.Utilities;
-using NUnit.Framework.Constraints;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Networking.PlayerConnection;
-using UnityTemplateProjects;
 
-namespace Editor
+namespace DynamicColorPalette.Editor.Properties
 {
     [CustomPropertyDrawer(typeof(MBMethodStorage))]
     public class MBMethodStorageEditor : BasePropertyDrawer

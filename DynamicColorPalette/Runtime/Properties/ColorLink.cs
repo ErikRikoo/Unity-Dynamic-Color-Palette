@@ -1,8 +1,9 @@
-﻿﻿using System;
+﻿using System;
+using DynamicColorPalette.Runtime.Utilities;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace UnityTemplateProjects
+namespace DynamicColorPalette.Runtime.Properties
 {
     [Serializable]
     public class ColorLink
