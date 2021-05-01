@@ -1,8 +1,10 @@
 ﻿using System.Reflection;
 using DynamicColorPalette.Editor.Utilities;
+using DynamicColorPalette.Editor.Utilities.UI;
 using DynamicColorPalette.Runtime.Properties;
 using DynamicColorPalette.Runtime.SO;
 using Editor.Utilities;
+using Editor.Utilities.UI;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,38 +13,24 @@ namespace DynamicColorPalette.Editor.Properties
     [CustomPropertyDrawer(typeof(ColorLink))]
     public class ColorLinkEditor : BasePropertyDrawer
     {
-        private int Margin => 5;
-
-        private int MinHeight => (int) EditorGUIUtility.singleLineHeight;
-        
         private Vector2 SquareSize => new Vector2(MinHeight, MinHeight);
         
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        protected override void DrawElements(Rect position, SerializedProperty property, GUIContent label)
         {
-            ColorLink instance = GetInstance<ColorLink>(property);
-            Object instanceOwner = GetInstanceOwner(property);
-            int minHeight = MinHeight;
-            Vector2 squareSize = SquareSize;
-            float minHeightAndMargin = minHeight + Margin;
-            
-            Vector2 startPosition = new Vector2(position.x, position.y);
-            
-            
-            // TODO: Add Undo.RecordObject
-            EditorGUI.LabelField(new Rect(position.x, startPosition.y, position.width, minHeight), label);
-            startPosition.y += minHeightAndMargin;
-            
+            ColorLink instance = GetInstance<ColorLink>();
+            Object instanceOwner = InstanceOwner;
+
+            EditorGUI.LabelField(GetLineDrawingRect(), label);
             ColorPalette palette = (ColorPalette) EditorGUI.ObjectField(
-                new Rect(position.x, startPosition.y, position.width, minHeight), instance.Palette,
-                    typeof(ColorPalette), allowSceneObjects: false
+                GetLineDrawingRect(), instance.Palette,
+                    typeof(ColorPalette), false
                 );
-            startPosition.y += minHeightAndMargin;
 
             if (palette != instance.Palette)
             {
                 Undo.RecordObject(instanceOwner, "Changing palette instance");
                 instance.Palette = palette;
-                CallOnValidateOnPropertyObject(property);
+                OnInstanceChanged();
             }
             
             if (palette == null)
@@ -50,57 +38,52 @@ namespace DynamicColorPalette.Editor.Properties
                 return;
             }
 
+            HandlePaletteDrawing();
+        }
+
+        private void HandlePaletteDrawing()
+        {
+            ColorLink instance = GetInstance<ColorLink>();
+            ColorPalette palette = instance.Palette;
+            Vector2 squareSize = SquareSize;
             int colorCount = palette.Count;
             
-            //position.y += minHeight;
-            //property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label, true);
-            // if (property.isExpanded)
+            if (Width < MinHeight)
             {
-                EditorGUI.BeginProperty(position, label, property);
-                {
-                    float width = position.width;
-                    if (width < minHeight)
-                    {
-                        return;
-                    }
-                    
-                    var squareCounts = GetSquareCounts(width, colorCount);
+                return;
+            }
+                
+            var squareCounts = GetSquareCounts(colorCount, Width);
 
-                    float yBeforeRectDrawing = startPosition.y;
-                    startPosition.y = DrawRects(startPosition, squareSize, squareCounts, palette);
-                    if (instance.Index >= 0)
+            Vector2 drawingPositionBeforeRects = CurrentDrawingStart;
+            DrawRects(squareCounts, palette);
+            if (instance.Index >= 0)
+            {
+                int index = instance.Index;
+                Vector2 indexGridPosition = GetGridPositionFromIndex(index, squareCounts);
+
+                Vector2 start = drawingPositionBeforeRects + indexGridPosition * squareSize;
+                Drawing.DrawRectBorder(start, squareSize, Color.cyan, 2);
+            }
+                
+            Event current = Event.current;
+            if (current.type == EventType.MouseDown)
+            {
+                Vector2 currentMousePosition = current.mousePosition;
+                Rect squaresRect = new Rect(drawingPositionBeforeRects, new Vector2(Width, CurrentDrawingStart.y - drawingPositionBeforeRects.y));
+                if (squaresRect.Contains(currentMousePosition))
+                {
+                    currentMousePosition -= squaresRect.min;
+                    currentMousePosition /= squareSize;
+                    int newIndex = (int) currentMousePosition.x +
+                                   (int) currentMousePosition.y * squareCounts.x;
+                    if (newIndex >= 0 && newIndex < colorCount)
                     {
-                        int index = instance.Index;
-                        Vector2 indexGridPosition = GetIndexFromGridPosition(index, squareCounts);
-                        
-                        Vector2 start = new Vector2(startPosition.x, yBeforeRectDrawing) 
-                                        + new Vector2(indexGridPosition.x * squareSize.x, indexGridPosition.y * squareSize.y);
-                        Drawing.DrawRectBorder(start, squareSize, Color.cyan, 2);
-                    }
-                    
-                    Event current = Event.current;
-                    Vector2 currentMousePosition = current.mousePosition;
-                    if (current.type == EventType.MouseDown)
-                    {
-                        float DrawingSpaceWidth = position.width;
-                        Rect squaresRect = new Rect(startPosition.x, yBeforeRectDrawing, DrawingSpaceWidth, startPosition.y - yBeforeRectDrawing);
-                        if (squaresRect.Contains(currentMousePosition))
-                        {
-                            currentMousePosition -= squaresRect.min;
-                            currentMousePosition /= squareSize;
-                            int newIndex = (int) currentMousePosition.x +
-                                           (int) currentMousePosition.y * (int) squareCounts.x;
-                            if (newIndex >= 0 && newIndex < colorCount)
-                            {
-                                Undo.RecordObject(instanceOwner, "Changing palette link index");
-                                instance.Index = newIndex;
-                                CallOnValidateOnPropertyObject(property);
-                            }
-                            
-                        }
+                        Undo.RecordObject(InstanceOwner, "Changing palette link index");
+                        instance.Index = newIndex;
+                        OnInstanceChanged();
                     }
                 }
-                EditorGUI.EndProperty();
             }
         }
         
@@ -116,8 +99,7 @@ namespace DynamicColorPalette.Editor.Properties
             }
             
             int colorCount = instance.Palette.Count;
-            float drawingSpaceWidth = EditorGUIUtility.currentViewWidth;
-            Vector2 squareCounts = GetSquareCounts(drawingSpaceWidth, colorCount);
+            Vector2 squareCounts = GetSquareCounts(colorCount, EditorGUIUtility.currentViewWidth);
             
             return lineHeightMargined + // Label
                    lineHeightMargined + // ColorPalette field
@@ -125,29 +107,31 @@ namespace DynamicColorPalette.Editor.Properties
                    Margin; // Final margin
         }
         
-        public float DrawRects(Vector2 startPosition, Vector2 size, Vector2 squareCounts, ColorPalette palette)
+        public void DrawRects(Vector2 squareCounts, ColorPalette palette)
         {
             int colorCount = palette.Count;
             int colorIndex = 0;
             for (int i = 0; i < squareCounts.y - 1; ++i)
             {
-                colorIndex = DrawRectLine(squareCounts.x, startPosition, size, colorIndex, palette);
-                startPosition.y += size.y;
+                colorIndex = DrawRectLine(squareCounts.x, colorIndex, palette);
+
             }
-            colorIndex = DrawRectLine(colorCount - colorIndex, startPosition, size, colorIndex, palette);
-            return startPosition.y + size.y;
+            DrawRectLine(colorCount - colorIndex, colorIndex, palette);
         }
 
-        public int DrawRectLine(float _count, Vector2 startPosition, Vector2 size, int colorIndex, ColorPalette palette)
+        public int DrawRectLine(float _count, int colorIndex, ColorPalette palette)
         {
+            Vector2 size = SquareSize;
+            Vector2 currentDrawingStart = CurrentDrawingStart;
             for (int j = 0; j < _count; ++j)
             {
                 var value = palette[colorIndex];
-                DrawColorRect(startPosition, size, value);
-                startPosition.x += size.x;
+                DrawColorRect(currentDrawingStart, size, value);
+                currentDrawingStart.x += size.x;
                 ++colorIndex;
             }
-
+            OnDraw(size.y);
+            
             return colorIndex;
         }
         
@@ -155,36 +139,23 @@ namespace DynamicColorPalette.Editor.Properties
         {
             Rect r = new Rect(startPosition, size);
             EditorGUI.DrawRect(r, value.color);
-            if (value.name.Length != 0)
-            {
-                GUI.Label(r, new GUIContent("", value.name), GUIStyle.none);
-            }
+            Controls.Tooltip(r, value.name);
         }
 
-        private static Vector2Int GetIndexFromGridPosition(int index, Vector2Int squareCounts)
+        private static Vector2Int GetGridPositionFromIndex(int index, Vector2Int squareCounts)
         {
             return new Vector2Int(index % squareCounts.x, index / squareCounts.x);
         }
 
-        private Vector2Int GetSquareCounts(float width, int colorCount)
+        private Vector2Int GetSquareCounts(int colorCount, float width)
         {
-            if (width == 0)
+            if (width < MinHeight)
             {
                 return Vector2Int.zero;
             }
             int squareCountInWidth = (int) (width / MinHeight);
             int lineCount = colorCount / squareCountInWidth;
             return new Vector2Int(squareCountInWidth, lineCount + 1);
-        }
-
-        private void CallOnValidateOnPropertyObject(SerializedProperty property)
-        {
-            var target = property.serializedObject.targetObject;
-            MethodInfo method = target.GetType().GetMethod("OnValidate", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            if (method != null)
-            {
-                method.Invoke(target, null);
-            }
         }
     }
 }

@@ -11,7 +11,10 @@ namespace DynamicColorPalette.Runtime.Properties
 
         public void Invoke(params object[] args)
         {
-            Instance?.GetType().GetMethod(MethodName)?.Invoke(Instance, args);
+            if (MethodName != null)
+            {
+                Instance?.GetType().GetMethod(MethodName)?.Invoke(Instance, args);
+            }
         }
     }
 }

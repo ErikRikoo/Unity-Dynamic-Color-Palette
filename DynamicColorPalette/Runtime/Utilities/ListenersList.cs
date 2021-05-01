@@ -7,12 +7,12 @@ namespace DynamicColorPalette.Runtime.Utilities
     [Serializable]
     public class Listener
     {
-        public UnityEngine.Object target;
-        public string methodName;
+        public UnityEngine.Object Target;
+        public string MethodName;
 
         public static bool operator==(Listener _instance, Listener _other)
         {
-            return Equals(_instance.target, _other.target) && _instance.methodName == _other.methodName;
+            return Equals(_instance.Target, _other.Target) && _instance.MethodName == _other.MethodName;
         }
 
         public static bool operator !=(Listener _instance, Listener _other)
@@ -22,7 +22,7 @@ namespace DynamicColorPalette.Runtime.Utilities
 
         public void Invoke(params object[] args)
         {
-            target.GetType().GetMethod(methodName)?.Invoke(target, args);
+            Target.GetType().GetMethod(MethodName)?.Invoke(Target, args);
         }
     }
     

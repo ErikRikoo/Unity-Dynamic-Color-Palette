@@ -17,10 +17,9 @@ namespace DynamicColorPalette.Runtime.Properties
         {
             m_Listener = new Listener()
             {
-                target = onColorUpdated.Target as UnityEngine.Object,
-                methodName = onColorUpdated.Method.Name,
+                Target = onColorUpdated.Target as UnityEngine.Object,
+                MethodName = onColorUpdated.Method.Name,
             };
-            
         }
         
         public int Index
@@ -30,18 +29,33 @@ namespace DynamicColorPalette.Runtime.Properties
             {
                 if (m_Index != value)
                 {
-                    if (m_Index >= 0)
-                    {
-                        Palette.GetAt(m_Index).RemoveListener(m_Listener);
-                    }
+                    RemoveCurrentListener();
                     m_Index = value;
-                    Palette.GetAt(m_Index).AddListener(m_Listener);
-                    m_Listener.Invoke(Palette.GetAt(m_Index).color);
+                    AddListener();
+                    m_Listener.Invoke((Color)this);
                 }
             }
         }
 
         // Should cache color
         public static implicit operator Color(ColorLink _instance) => _instance.Palette[_instance.Index].Item1;
+
+        public void OnDestroy()
+        {
+            RemoveCurrentListener();
+        }
+
+        private void RemoveCurrentListener()
+        {
+            if (m_Index >= 0)
+            {
+                Palette.GetAt(m_Index).RemoveListener(m_Listener);
+            }
+        }
+
+        private void AddListener()
+        {
+            Palette.GetAt(m_Index).AddListener(m_Listener);
+        }
     }
 }
