@@ -2,16 +2,9 @@
 using System.Collections.Generic;
 using DynamicColorPalette.Runtime.Utilities;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace DynamicColorPalette.Runtime.SO
 {
-    [Serializable]
-    public class ColorEvent : UnityEvent<Color>
-    {
-        
-    }
-
     [Serializable]
     public class ColorAttribute
     {
@@ -34,7 +27,6 @@ namespace DynamicColorPalette.Runtime.SO
 
         public void AddListener(Listener _newListener)
         {
-            //listeners.RemoveListener(_newListener);
             listeners.AddListener(_newListener);
         }
         

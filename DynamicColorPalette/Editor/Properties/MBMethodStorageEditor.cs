@@ -1,156 +1,91 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using DynamicColorPalette.Runtime.Properties;
-using Editor.Utilities;
+using Editor.Utilities.UI;
 using UnityEditor;
 using UnityEngine;
+using DynamicColorPalette.Editor.Utilities;
+using DynamicColorPalette.Editor.Utilities.Reflection;
+using Object = UnityEngine.Object;
+
 
 namespace DynamicColorPalette.Editor.Properties
 {
     [CustomPropertyDrawer(typeof(MBMethodStorage))]
     public class MBMethodStorageEditor : BasePropertyDrawer
     {
-        
-        private int Margin => 5;
-
-        private int MinHeight => (int) EditorGUIUtility.singleLineHeight;
-        
-        public override void OnGUI(Rect position, SerializedProperty property,
-            GUIContent label)
+        protected override void DrawElements(Rect position, SerializedProperty property, GUIContent label)
         {
-            Vector2 startPosition = position.position;
-            MBMethodStorage instance = GetInstance<MBMethodStorage>(property);
-            float lineHeightMargined = MinHeight + Margin;
-            float drawSpaceWidth = position.width;
-            float indentationSpace = MinHeight * 0.5f;
-            
-            Rect foldoutRect = new Rect(startPosition, new Vector2(drawSpaceWidth, MinHeight));
-            property.isExpanded = EditorGUI.Foldout(foldoutRect, property.isExpanded, label);
-            startPosition.y += lineHeightMargined;
-            
-            MonoBehaviour owner = GetInstanceOwner<MonoBehaviour>(property);
+            property.isExpanded = EditorGUI.Foldout(GetLineDrawingRect(), property.isExpanded, label);
             if (property.isExpanded)
             {
-                ++EditorGUI.indentLevel;
-                startPosition.x += indentationSpace;
-                drawSpaceWidth -= indentationSpace;
-                Component[] components = owner.gameObject.GetComponents<Component>();
-                Rect firstPopupRect = new Rect(startPosition, new Vector2(drawSpaceWidth, MinHeight));
-                int currentObjectSelected = -1;
-                string[] componentsNames = GetObjectNamesWithCurrentlySelected(components, instance.Instance, ref currentObjectSelected);
-                int selectedComponent = EditorGUI.Popup(firstPopupRect, "Component", currentObjectSelected, componentsNames);
-                startPosition.y += lineHeightMargined;
-
-                if (selectedComponent == -1)
-                {
-                    instance.Instance = null;
-                    EditorUtility.SetDirty(GetInstanceOwner(property));
-                }
-                else if (instance.Instance != components[selectedComponent])
-                {
-                    instance.Instance = components[selectedComponent];
-                    EditorUtility.SetDirty(GetInstanceOwner(property));
-                }
-
-                if (instance.Instance != null)
-                {
-                    int currentFunctionSelected = -1;
-                    string[] functionNames =
-                        GetValidFunctionName(instance.Instance, instance.MethodName, ref currentFunctionSelected);
-                    Rect secondPopupRect = new Rect(startPosition, new Vector2(drawSpaceWidth, MinHeight));
-                    int selectedFunction = EditorGUI.Popup(secondPopupRect, "Function", currentFunctionSelected, functionNames);
-
-                    if (selectedFunction == -1)
-                    {
-                        instance.MethodName = null;
-                        EditorUtility.SetDirty(GetInstanceOwner(property));
-                    }
-                    else if (instance.MethodName != functionNames[selectedFunction])
-                    {
-                        instance.MethodName = functionNames[selectedFunction];
-                        EditorUtility.SetDirty(GetInstanceOwner(property));
-                    }
-                }
-
-                drawSpaceWidth += indentationSpace;
-                startPosition.x -= indentationSpace;
-                --EditorGUI.indentLevel;
+                ++IndentLevel;
+                DrawComponentField();
+                DrawMethodField();
+                --IndentLevel;
             }
         }
 
-        private string[] GetValidFunctionName(Object selectedComponent, string currentFunction, ref int currentFunctionSelected)
+        private void DrawComponentField()
         {
-            if (selectedComponent == null)
+            MonoBehaviour owner = GetInstanceOwner<MonoBehaviour>();
+            MBMethodStorage instance = GetInstance<MBMethodStorage>();
+
+            Component[] components = owner.gameObject.GetComponents<Component>();
+            string[] componentsNames = GetValidComponentNames(components);
+            int objectSelectedIndex = Array.FindIndex(components, val => val == instance.Instance);
+
+            int selectedComponent = EditorGUI.Popup(GetLineDrawingRect(), "Component", objectSelectedIndex,
+                componentsNames);
+
+            Object componentValue = selectedComponent == -1 ? null : components[selectedComponent];
+            if (componentValue != instance.Instance)
+            {
+                instance.Instance = componentValue;
+                OnInstanceChanged();
+            }
+        }
+
+        private void DrawMethodField()
+        {
+            MBMethodStorage instance = GetInstance<MBMethodStorage>();
+            if (instance.Instance != null)
+            {
+                string[] functionNames =
+                    GetValidFunctionName(instance);
+                int currentFunctionSelected = Array.FindIndex(functionNames, s => s == instance.MethodName);
+
+                int selectedFunctionIndex = EditorGUI.Popup(GetLineDrawingRect(), "Function", currentFunctionSelected,
+                    functionNames);
+
+                string functionValue = selectedFunctionIndex == -1 ? null : functionNames[selectedFunctionIndex];
+                if (functionValue != instance.MethodName)
+                {
+                    instance.MethodName = functionValue;
+                    OnInstanceChanged();
+                }
+            }
+        }
+        
+        private string[] GetValidComponentNames(Component[] components)
+        {
+            Object self = GetInstanceOwner<Object>();
+            return components.FilterAndGetTypeNames(component => component != self);
+        }
+        
+        private string[] GetValidFunctionName(MBMethodStorage _instance)
+        {
+            if (_instance.Instance == null)
             {
                 return new string[0];
             }
-            
-            List<string> ret = new List<string>();
-            MethodInfo[] methods = selectedComponent.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
 
-            int index = 0;
-            for (var i = 0; i < methods.Length; i++)
-            {
-                MethodInfo methodInfo = methods[i];
-                var parameters = methodInfo.GetParameters();
-                if (parameters.Length != 1)
-                {
-                    continue;
-                }
-
-                if(!typeof(Color).IsAssignableFrom(parameters[0].ParameterType))
-                {
-                    continue;
-                }
-
-                if (methodInfo.Name == currentFunction)
-                {
-                    currentFunctionSelected = ret.Count;
-                }
-                
-                ret.Add(methodInfo.Name);
-            }
-            foreach (var methodInfo in methods)
+            return _instance.Instance.GetPublicInstanceMethods().FilterAndGetNames(methodInfo =>
             {
                 var parameters = methodInfo.GetParameters();
-                if (parameters.Length != 1)
-                {
-                    continue;
-                }
-
-                if(!typeof(Color).IsAssignableFrom(parameters[0].ParameterType))
-                {
-                    continue;
-                }
-
-                if (methodInfo.Name == currentFunction)
-                {
-                    
-                }
-                
-                ret.Add(methodInfo.Name);
-            }
-            
-            return ret.ToArray();
-        }
-
-        private string[] GetObjectNamesWithCurrentlySelected(Component[] components, UnityEngine.Object currentComponent, ref int current)
-        {
-            string[] ret = new string[components.Length];
-            int index = 0;
-            foreach (var component in components)
-            {
-                if (component == currentComponent)
-                {
-                    current = index;
-                }
-
-                ret[index] = component.GetType().Name;
-
-                ++index;
-            }
-
-            return ret;
+                return parameters.Length == 1 && typeof(Color).IsAssignableFrom(parameters[0].ParameterType);
+            });
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)

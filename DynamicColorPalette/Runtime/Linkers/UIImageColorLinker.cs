@@ -1,27 +1,26 @@
 ﻿using DynamicColorPalette.Runtime.Properties;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace DynamicColorPalette.Runtime.Linkers
 {
     [RequireComponent(typeof(Image))]
-    public class UIImageColorLinker : MonoBehaviour
+    public class UIImageColorLinker : AColorLinker
     {
-        [SerializeField] private ColorLink m_ColorLink;
-        
         private Image m_Image;
-        
-        private void OnValidate()
+
+        protected override void Initialization()
         {
             if (m_Image == null)
             {
                 m_Image = GetComponent<Image>();
             }
-            
-            if (m_ColorLink == null)
-            {
-                m_ColorLink = new ColorLink(OnColorUpdated);
-            }
+        }
+
+        protected override UnityAction<Color> GetAction()
+        {
+            return OnColorUpdated;
         }
 
         public void OnColorUpdated(Color _color)

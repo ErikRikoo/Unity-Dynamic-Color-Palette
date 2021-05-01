@@ -1,19 +1,16 @@
 ﻿ using DynamicColorPalette.Runtime.Properties;
  using UnityEngine;
+ using UnityEngine.Events;
 
  namespace DynamicColorPalette.Runtime.Linkers
 {
-    public class GenericColorLinker : MonoBehaviour
+    public class GenericColorLinker : AColorLinker
     {
-        [SerializeField] private ColorLink m_ColorLink;
         [SerializeField] private MBMethodStorage m_MethodStorage;
-        
-        private void OnValidate()
+
+        protected override UnityAction<Color> GetAction()
         {
-            if (m_ColorLink == null)
-            {
-                m_ColorLink = new ColorLink(OnColorUpdated);
-            }
+            return OnColorUpdated;
         }
 
         public void OnColorUpdated(Color _newColor)

@@ -1,6 +1,6 @@
 ﻿﻿using UnityEngine;
 
- namespace DynamicColorPalette.Editor.Utilities
+ namespace DynamicColorPalette.Editor.Utilities.UI
 {
     public static class Drawing
     {
@@ -20,9 +20,8 @@
         {
             Vector2 end;
             Vector2 start;
-            start = _start;
             end = _start + new Vector2(0, _size.y);
-            DrawVerticalLine(start, end, _color, _width);
+            DrawVerticalLine(_start, end, _color, _width);
             start = _start + new Vector2(_size.x, 0);
             end = _start + _size;
             DrawVerticalLine(start, end, _color, -_width);
