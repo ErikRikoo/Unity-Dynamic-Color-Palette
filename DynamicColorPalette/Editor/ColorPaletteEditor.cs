@@ -1,8 +1,9 @@
-﻿using DynamicColorPalette.Runtime;
-using DynamicColorPalette.Runtime.SO;
-using UnityEditor;
+﻿using DynamicColorPalette.Runtime.SO;
+
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
 namespace DynamicColorPalette.Editor
 {
     [CustomEditor(typeof(ColorPalette))]
@@ -87,3 +88,4 @@ namespace DynamicColorPalette.Editor
         }
     }
 }
+#endif

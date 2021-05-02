@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
 using DynamicColorPalette.Runtime.Properties;
-using Editor.Utilities.UI;
-using UnityEditor;
 using UnityEngine;
-using DynamicColorPalette.Editor.Utilities;
+
+
+#if UNITY_EDITOR
+using UnityEditor;
+using Editor.Utilities.UI;
 using DynamicColorPalette.Editor.Utilities.Reflection;
 using Object = UnityEngine.Object;
-
 
 namespace DynamicColorPalette.Editor.Properties
 {
@@ -104,3 +103,4 @@ namespace DynamicColorPalette.Editor.Properties
         }
     }
 }
+#endif

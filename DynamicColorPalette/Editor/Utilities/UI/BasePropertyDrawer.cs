@@ -1,6 +1,8 @@
 ﻿ using DynamicColorPalette.Editor.Utilities.UI;
- using UnityEditor;
 using UnityEngine;
+
+ #if UNITY_EDITOR
+ using UnityEditor;
 
 namespace Editor.Utilities.UI
 {
@@ -112,3 +114,5 @@ namespace Editor.Utilities.UI
         #endregion
     }
 }
+
+#endif

@@ -1,4 +1,7 @@
 ﻿using System;
+
+
+#if UNITY_EDITOR
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -38,3 +41,5 @@ namespace DynamicColorPalette.Editor.Utilities.Reflection
         }
     }
 }
+
+#endif
