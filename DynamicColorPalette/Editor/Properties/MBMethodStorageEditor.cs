@@ -4,12 +4,12 @@ using UnityEngine;
 
 
 #if UNITY_EDITOR
-using DynamicColorPalette._Editor.Utilities.Reflection;
-using DynamicColorPalette._Editor.Utilities.UI;
+using DynamicColorPalette.Editor.Utilities.Reflection;
+using DynamicColorPalette.Editor.Utilities.UI;
 using UnityEditor;
 using Object = UnityEngine.Object;
 
-namespace DynamicColorPalette._Editor.Properties
+namespace DynamicColorPalette.Editor.Properties
 {
     [CustomPropertyDrawer(typeof(MBMethodStorage))]
     public class MBMethodStorageEditor : BasePropertyDrawer

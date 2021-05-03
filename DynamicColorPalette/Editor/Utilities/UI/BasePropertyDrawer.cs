@@ -4,7 +4,7 @@ using UnityEngine;
  #if UNITY_EDITOR
  using UnityEditor;
 
-namespace DynamicColorPalette._Editor.Utilities.UI
+namespace DynamicColorPalette.Editor.Utilities.UI
 {
     public abstract class BasePropertyDrawer : PropertyDrawer
     {

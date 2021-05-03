@@ -6,7 +6,7 @@ using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
-using DynamicColorPalette._Editor.Utilities.UI;
+using DynamicColorPalette.Editor.Utilities.UI;
 
 
 namespace DynamicColorPalette._Editor.Properties

@@ -1,7 +1,7 @@
 ﻿﻿using UnityEngine;
 
  #if UNITY_EDITOR
- namespace DynamicColorPalette._Editor.Utilities.UI
+ namespace DynamicColorPalette.Editor.Utilities.UI
 {
     public static class Drawing
     {

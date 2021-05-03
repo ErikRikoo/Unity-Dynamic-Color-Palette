@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace DynamicColorPalette._Editor.Utilities.Reflection
+namespace DynamicColorPalette.Editor.Utilities.Reflection
 {
     public static class ReflectionMethodUtilities
     {
