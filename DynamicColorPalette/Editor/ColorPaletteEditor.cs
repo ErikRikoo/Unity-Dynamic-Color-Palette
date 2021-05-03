@@ -4,7 +4,7 @@ using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
-namespace DynamicColorPalette.Editor
+namespace DynamicColorPalette._Editor
 {
     [CustomEditor(typeof(ColorPalette))]
     public class ColorPaletteEditor : UnityEditor.Editor

@@ -5,12 +5,11 @@ using DynamicColorPalette.Runtime.SO;
 using UnityEngine;
 
 #if UNITY_EDITOR
-using DynamicColorPalette.Editor.Utilities.UI;
 using UnityEditor;
-using Editor.Utilities.UI;
+using DynamicColorPalette._Editor.Utilities.UI;
 
 
-namespace DynamicColorPalette.Editor.Properties
+namespace DynamicColorPalette._Editor.Properties
 {
     [CustomPropertyDrawer(typeof(ColorLink))]
     public class ColorLinkEditor : BasePropertyDrawer

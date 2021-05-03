@@ -5,7 +5,7 @@ using UnityEngine;
 using System.Reflection;
 using UnityEditor;
 
-namespace DynamicColorPalette.Editor.Utilities.UI
+namespace DynamicColorPalette._Editor.Utilities.UI
 {
     public static class SerializedPropertyUtilities
     {
