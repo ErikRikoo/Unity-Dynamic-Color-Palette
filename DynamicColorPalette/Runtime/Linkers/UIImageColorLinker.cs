@@ -1,4 +1,5 @@
 ﻿using DynamicColorPalette.Runtime.Properties;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -25,9 +26,8 @@ namespace DynamicColorPalette.Runtime.Linkers
 
         public void OnColorUpdated(Color _color)
         {
-            Color32 _new = _color;
-            m_Image.color = _new;
-            //m_Image.SetAllDirty();
+            m_Image.color = _color;
+            EditorApplication.QueuePlayerLoopUpdate();
         }
     }
 }
