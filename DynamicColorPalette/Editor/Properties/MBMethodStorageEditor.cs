@@ -35,6 +35,7 @@ namespace DynamicColorPalette.Editor.Properties
             string[] componentsNames = GetValidComponentNames(components);
             int objectSelectedIndex = Array.FindIndex(components, val => val == instance.Instance);
 
+            //Debug.Log($"Line Drawing = {GetLineDrawingRect()}");
             int selectedComponent = EditorGUI.Popup(GetLineDrawingRect(), "Component", objectSelectedIndex,
                 componentsNames);
 

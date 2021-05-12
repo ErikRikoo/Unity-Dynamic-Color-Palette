@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace DynamicColorPalette.Runtime.Utilities
 {
@@ -26,7 +29,8 @@ namespace DynamicColorPalette.Runtime.Utilities
         }
     }
     
-    public class ListenersList
+    [Serializable]
+    public class ListenersList : IEnumerable<Listener>
     {
         [SerializeField] private List<Listener> m_Listeners = new List<Listener>();
 
@@ -65,6 +69,25 @@ namespace DynamicColorPalette.Runtime.Utilities
         }
 
         public void RemoveAllListeners()
+        {
+            m_Listeners.Clear();
+        }
+
+        public IEnumerator<Listener> GetEnumerator()
+        {
+            return m_Listeners.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public bool Empty => Count == 0;
+
+        public int Count => m_Listeners.Count;
+
+        public void Clear()
         {
             m_Listeners.Clear();
         }

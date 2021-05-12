@@ -39,7 +39,7 @@ namespace DynamicColorPalette.Editor.Utilities.UI
             {
                 int delta = value - m_IndentLevel;
                 m_DrawingRect.position += new Vector2(delta * Tabulation, 0);
-                m_DrawingRect.width += delta * Tabulation;
+                m_DrawingRect.width -= delta * Tabulation;
                 m_IndentLevel = value;
             }
         }
@@ -96,7 +96,7 @@ namespace DynamicColorPalette.Editor.Utilities.UI
             m_CurrentProperty.CallOnValidateOnPropertyObject();
         }
 
-        protected void OnInstanceChanged()
+        protected virtual void OnInstanceChanged()
         {
             EditorUtility.SetDirty(InstanceOwner);
         }

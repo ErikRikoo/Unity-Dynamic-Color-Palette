@@ -27,7 +27,8 @@ namespace DynamicColorPalette.Runtime.Linkers
         public void OnColorUpdated(Color _color)
         {
             m_Image.color = _color;
-            EditorApplication.QueuePlayerLoopUpdate();
+            EditorUtility.SetDirty(m_Image);
+            //EditorApplication.QueuePlayerLoopUpdate();
         }
     }
 }

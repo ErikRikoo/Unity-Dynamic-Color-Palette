@@ -36,14 +36,31 @@ namespace DynamicColorPalette.Runtime.SO
         }
     }
     
+    
+    [ExecuteInEditMode]
     [CreateAssetMenu(fileName = "ColorPalette", menuName = "ColorPalette", order = 0)]
     public class ColorPalette : ScriptableObject
     {
         [SerializeField] private List<ColorAttribute> m_ColorAttributes = new List<ColorAttribute>();
+        [SerializeField] public Color DefaultColor = new Color(0, 0, 0, 1);
+        [SerializeField] public string DefaultName;
 
         public int Count => m_ColorAttributes.Count;
 
         public bool IsEmpty => Count == 0;
+
+        private void Awake()
+        {
+            foreach (var colorAttribute in m_ColorAttributes)
+            {
+                colorAttribute.listeners.Clear();
+            }
+        }
+
+        public void AddColor()
+        {
+            AddColor(DefaultColor, DefaultName);
+        }
         
         public void AddColor(Color _newColor, string _newColorName)
         {
@@ -52,11 +69,6 @@ namespace DynamicColorPalette.Runtime.SO
                 color = _newColor,
                 name = _newColorName,
             });
-        }
-        
-        public void AddColorListener(int _index, Listener _newListener)
-        {
-            m_ColorAttributes[_index].AddListener(_newListener);
         }
 
         public void RemoveColorAt(int _index)
@@ -79,5 +91,12 @@ namespace DynamicColorPalette.Runtime.SO
         {
             return m_ColorAttributes[_index];
         }
+        
+        #if UNITY_EDITOR
+        [HideInInspector]
+        public bool IsDefaultFoldoutExpanded;
+        [HideInInspector]
+        public bool IsColorFoldoutExpanded;
+        #endif
     }
 }

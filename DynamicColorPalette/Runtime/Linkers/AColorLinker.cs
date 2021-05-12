@@ -7,10 +7,25 @@ using UnityEngine.PlayerLoop;
 namespace DynamicColorPalette.Runtime.Linkers
 {
     [ExecuteInEditMode]
-
     public abstract class AColorLinker : MonoBehaviour
     {
         [SerializeField] private ColorLink m_ColorLink;
+
+
+        private void Awake()
+        {
+            Debug.Log("Awake Called");
+            if (m_ColorLink != null)
+            {
+                int id = m_ColorLink.Index;
+                var palette = m_ColorLink.Palette;
+                m_ColorLink = new ColorLink(m_ColorLink, GetAction()) { Palette = palette, Index = id};
+            }
+            else
+            {
+                m_ColorLink = new ColorLink(GetAction());
+            }
+        }
 
         private void OnValidate()
         {

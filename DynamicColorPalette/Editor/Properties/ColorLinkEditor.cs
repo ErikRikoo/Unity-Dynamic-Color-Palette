@@ -158,6 +158,15 @@ namespace DynamicColorPalette._Editor.Properties
             int lineCount = colorCount / squareCountInWidth;
             return new Vector2Int(squareCountInWidth, lineCount + 1);
         }
+
+        protected override void OnInstanceChanged()
+        {
+            base.OnInstanceChanged();
+            // TODO: See if it is needed
+            EditorUtility.SetDirty(GetInstance<ColorLink>().Palette);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
     }
 }
 #endif

@@ -67,6 +67,7 @@ It is a Scriptable Object so you can create as much as you want by
 Right Clicking in the Project Hierarchy view, and then choose ColorPalette.
 
 - Using the Color Palette
+    - You can change the default value that will be added when using the `+` button.
     - Adding and Removing colors can be done by pressing `+` and `-` button on top right.
     - A color has a color and a name that can be used to distinguish between colors and have a clear label
     - You can remove the color you want by pressing the `x` button on the right of the color.
@@ -74,7 +75,7 @@ Right Clicking in the Project Hierarchy view, and then choose ColorPalette.
 ### Create links between the palette and an object
 Currently, you have in the package some `MonoBehaviour` to create the link, they are all named like this `[Target]ColorLink`
 - Renderer
-- Image **[WIP]** 
+- Image
 - Generic
 
 After adding the MonoBehaviour to an object:
@@ -129,8 +130,8 @@ public class MyAmazingColorLinker : AColorLinker
 
 ## TODO
 - [ ] Add information on the listeners in the Color Palette
-- [ ] Allows to specify a default value for new colors
-- [ ] Image Color Linker
+- [x] Allows to specify a default value for new colors
+- [x] Image Color Linker
 
 ## Suggestions
 Feel free to suggest features by creating an issue, any idea is welcome !
