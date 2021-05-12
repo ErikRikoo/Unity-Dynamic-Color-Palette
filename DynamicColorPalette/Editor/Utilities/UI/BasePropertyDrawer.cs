@@ -1,8 +1,10 @@
-﻿ using DynamicColorPalette.Editor.Utilities.UI;
- using UnityEditor;
+﻿
 using UnityEngine;
 
-namespace Editor.Utilities.UI
+ #if UNITY_EDITOR
+ using UnityEditor;
+
+namespace DynamicColorPalette.Editor.Utilities.UI
 {
     public abstract class BasePropertyDrawer : PropertyDrawer
     {
@@ -37,7 +39,7 @@ namespace Editor.Utilities.UI
             {
                 int delta = value - m_IndentLevel;
                 m_DrawingRect.position += new Vector2(delta * Tabulation, 0);
-                m_DrawingRect.width += delta * Tabulation;
+                m_DrawingRect.width -= delta * Tabulation;
                 m_IndentLevel = value;
             }
         }
@@ -94,7 +96,7 @@ namespace Editor.Utilities.UI
             m_CurrentProperty.CallOnValidateOnPropertyObject();
         }
 
-        protected void OnInstanceChanged()
+        protected virtual void OnInstanceChanged()
         {
             EditorUtility.SetDirty(InstanceOwner);
         }
@@ -112,3 +114,5 @@ namespace Editor.Utilities.UI
         #endregion
     }
 }
+
+#endif

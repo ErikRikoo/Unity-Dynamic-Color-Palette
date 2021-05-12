@@ -15,11 +15,22 @@ namespace DynamicColorPalette.Runtime.Properties
 
         public ColorLink(UnityAction<Color> onColorUpdated)
         {
-            m_Listener = new Listener()
+            m_Listener = new Listener
             {
                 Target = onColorUpdated.Target as UnityEngine.Object,
                 MethodName = onColorUpdated.Method.Name,
             };
+        }
+        
+        public ColorLink(ColorLink other, UnityAction<Color> onColorUpdated)
+        {
+            Palette = other.Palette;
+            m_Listener = new Listener
+            {
+                Target = onColorUpdated.Target as UnityEngine.Object,
+                MethodName = onColorUpdated.Method.Name,
+            };
+            Index = Palette == null ? -1 : other.m_Index;
         }
         
         public int Index
@@ -55,7 +66,7 @@ namespace DynamicColorPalette.Runtime.Properties
 
         private void AddListener()
         {
-            Palette.GetAt(m_Index).AddListener(m_Listener);
+            Palette?.GetAt(m_Index).AddListener(m_Listener);
         }
     }
 }

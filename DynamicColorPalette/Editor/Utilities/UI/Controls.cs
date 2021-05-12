@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+#if UNITY_EDITOR
 namespace DynamicColorPalette.Editor.Utilities.UI
 {
     public static class Controls
@@ -13,3 +14,4 @@ namespace DynamicColorPalette.Editor.Utilities.UI
         }
     }
 }
+#endif

@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
 using DynamicColorPalette.Runtime.Properties;
-using Editor.Utilities.UI;
-using UnityEditor;
 using UnityEngine;
-using DynamicColorPalette.Editor.Utilities;
-using DynamicColorPalette.Editor.Utilities.Reflection;
-using Object = UnityEngine.Object;
 
+
+#if UNITY_EDITOR
+using DynamicColorPalette.Editor.Utilities.Reflection;
+using DynamicColorPalette.Editor.Utilities.UI;
+using UnityEditor;
+using Object = UnityEngine.Object;
 
 namespace DynamicColorPalette.Editor.Properties
 {
@@ -36,6 +35,7 @@ namespace DynamicColorPalette.Editor.Properties
             string[] componentsNames = GetValidComponentNames(components);
             int objectSelectedIndex = Array.FindIndex(components, val => val == instance.Instance);
 
+            //Debug.Log($"Line Drawing = {GetLineDrawingRect()}");
             int selectedComponent = EditorGUI.Popup(GetLineDrawingRect(), "Component", objectSelectedIndex,
                 componentsNames);
 
@@ -104,3 +104,4 @@ namespace DynamicColorPalette.Editor.Properties
         }
     }
 }
+#endif

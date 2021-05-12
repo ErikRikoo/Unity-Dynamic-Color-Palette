@@ -1,5 +1,6 @@
 ﻿﻿using UnityEngine;
 
+ #if UNITY_EDITOR
  namespace DynamicColorPalette.Editor.Utilities.UI
 {
     public static class Drawing
@@ -33,3 +34,4 @@
         }
     }
 }
+#endif

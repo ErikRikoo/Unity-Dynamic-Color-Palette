@@ -1,6 +1,9 @@
-﻿using System.Reflection;
-using UnityEditor;
+﻿
 using UnityEngine;
+
+#if UNITY_EDITOR
+using System.Reflection;
+using UnityEditor;
 
 namespace DynamicColorPalette.Editor.Utilities.UI
 {
@@ -28,3 +31,4 @@ namespace DynamicColorPalette.Editor.Utilities.UI
         }
     }
 }
+#endif

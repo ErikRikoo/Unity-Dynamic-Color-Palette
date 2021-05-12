@@ -1,14 +1,15 @@
-﻿using System.Reflection;
-using DynamicColorPalette.Editor.Utilities;
-using DynamicColorPalette.Editor.Utilities.UI;
+﻿
 using DynamicColorPalette.Runtime.Properties;
 using DynamicColorPalette.Runtime.SO;
-using Editor.Utilities;
-using Editor.Utilities.UI;
-using UnityEditor;
+
 using UnityEngine;
 
-namespace DynamicColorPalette.Editor.Properties
+#if UNITY_EDITOR
+using UnityEditor;
+using DynamicColorPalette.Editor.Utilities.UI;
+
+
+namespace DynamicColorPalette._Editor.Properties
 {
     [CustomPropertyDrawer(typeof(ColorLink))]
     public class ColorLinkEditor : BasePropertyDrawer
@@ -157,5 +158,15 @@ namespace DynamicColorPalette.Editor.Properties
             int lineCount = colorCount / squareCountInWidth;
             return new Vector2Int(squareCountInWidth, lineCount + 1);
         }
+
+        protected override void OnInstanceChanged()
+        {
+            base.OnInstanceChanged();
+            // TODO: See if it is needed
+            EditorUtility.SetDirty(GetInstance<ColorLink>().Palette);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
     }
 }
+#endif
